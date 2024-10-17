@@ -1,5 +1,5 @@
 #include <iostream>
-#include "mtx.h"
+#include "matx.h"
 
 int main()
 {
