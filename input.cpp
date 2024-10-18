@@ -9,4 +9,9 @@ void input(int** t, size_t M, size_t N)
       std::cin >> t[i][j];
     }
   }
+  if (!std::cin.good())
+  {
+    std::cerr << "Error input\n";
+    destroy(t, M);
+  }
 }
