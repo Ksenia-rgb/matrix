@@ -1,3 +1,2 @@
 matrix: main.cpp
-	g++ main.cpp -o matrix
-	g++ destroy.cpp -o matrix
+	g++ main.cpp create.cpp destroy.cpp input.cpp output.cpp -o matrix
