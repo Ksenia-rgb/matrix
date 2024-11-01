@@ -8,9 +8,9 @@ struct Matrix
     Matrix(const Matrix& mtx_old);
     ~Matrix();
     void input_();
-    void print_();
-    int get_rows_();
-    int get_cols_();
+    void print_() const;
+    int get_rows_() const;
+    int get_cols_() const;
     void initialize_(int init_num);
     void change_size_(int new_rows, int new_cols);
 private:

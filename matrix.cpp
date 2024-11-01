@@ -8,7 +8,7 @@ int** create(size_t rows, size_t cols)
   size_t created = 0;
   try
   {
-    for (;created < rows; ++created)
+    for (; created < rows; ++created)
     {
       matrix[created] = new int[cols];
     }
@@ -19,13 +19,29 @@ int** create(size_t rows, size_t cols)
   }
   return matrix;
 }
-void copy_matrix(int const *const *const mtx_old_, int** matrix_, size_t rows_, size_t cols_)
+void create(int** matrix, size_t rows, size_t cols)
+{
+  matrix = new int*[rows];
+  size_t created = 0;
+  try
+  {
+    for (; created < rows; ++created)
+    {
+      matrix[created] = new int[cols];
+    }
+  }
+  catch (const std::bad_alloc& e) {
+    destroy(matrix, created);
+    std::cerr << "ERROR: Memory not allocated for array\n";
+  }
+}
+void copy_matrix(int const *const *const mtx_old_, int* const* const matrix_, size_t rows_, size_t cols_)
 {
   for (size_t i = 0; i < rows_; i++)
   {
     for (size_t j = 0; j < cols_; j++)
     {
-        matrix_[i][j] = matrix_[i][j];
+        matrix_[i][j] = mtx_old_[i][j];
     }
   }
 }
@@ -52,7 +68,7 @@ void input(int** matrix, size_t rows, size_t cols)
     destroy(matrix, rows);
   }
 }
-void print(const int *const *const matrix, size_t rows, size_t cols)
+void print(const int* const* const matrix, size_t rows, size_t cols)
 {
   for (size_t i = 0; i < rows; i++)
   {
@@ -64,7 +80,7 @@ void print(const int *const *const matrix, size_t rows, size_t cols)
     std::cout << "\n";
   }
 }
-void initialize(int *const *const matrix, size_t rows, size_t cols, int init_num)
+void initialize(int* const* const matrix, size_t rows, size_t cols, int init_num)
 {
   for (size_t i = 0; i < rows; i++)
   {
@@ -76,9 +92,10 @@ void initialize(int *const *const matrix, size_t rows, size_t cols, int init_num
 }
 void change_size(int** matrix, size_t rows, size_t cols, size_t new_rows, size_t new_cols)
 {
-  size_t min_rows = std::min_element(rows, new_rows);
-  size_t min_cols = std::max_element(cols, new_cols);
+  size_t min_rows = std::min(rows, new_rows);
+  size_t min_cols = std::max(cols, new_cols);
   int** new_matrix = create(new_rows, new_cols);
+  initialize(new_matrix, new_rows, new_cols, 0);
   for (size_t i = 0; i < min_rows; i++)
   {
     for (size_t j = 0; j < min_cols; j++)
@@ -87,7 +104,12 @@ void change_size(int** matrix, size_t rows, size_t cols, size_t new_rows, size_t
     }
   }
   destroy(matrix, rows);
+  create(matrix, new_rows, new_cols);
   matrix = new_matrix;
+  for (size_t i = 0; i < new_rows; i++)
+  {
+    matrix[i] = new_matrix[i];
+  }
 }
 
 Matrix::Matrix(size_t rows, size_t cols):
@@ -110,15 +132,15 @@ void Matrix::input_()
 {
   input(matrix_, rows_, cols_);
 }
-void Matrix::print_()
+void Matrix::print_() const
 {
   print(matrix_, rows_, cols_);
 }
-int Matrix::get_rows_()
+int Matrix::get_rows_() const
 {
   return rows_;
 }
-int Matrix::get_cols_()
+int Matrix::get_cols_() const
 {
   return cols_;
 }
