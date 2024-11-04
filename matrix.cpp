@@ -35,7 +35,7 @@ void create(int** matrix, size_t rows, size_t cols)
     std::cerr << "ERROR: Memory not allocated for array\n";
   }
 }
-void copy_matrix(int const *const *const mtx_old_, int* const* const matrix_, size_t rows_, size_t cols_)
+void copy_matrix(int const* const* const mtx_old_, int* const* const matrix_, size_t rows_, size_t cols_)
 {
   for (size_t i = 0; i < rows_; i++)
   {
@@ -90,26 +90,18 @@ void initialize(int* const* const matrix, size_t rows, size_t cols, int init_num
     }
   }
 }
-void change_size(int** matrix, size_t rows, size_t cols, size_t new_rows, size_t new_cols)
+int** change_size(int** matrix, size_t rows, size_t cols, size_t new_rows, size_t new_cols)
 {
   size_t min_rows = std::min(rows, new_rows);
   size_t min_cols = std::max(cols, new_cols);
   int** new_matrix = create(new_rows, new_cols);
   initialize(new_matrix, new_rows, new_cols, 0);
-  for (size_t i = 0; i < min_rows; i++)
-  {
-    for (size_t j = 0; j < min_cols; j++)
-    {
-      new_matrix[i][j] = matrix[i][j];
-    }
-  }
+  copy_matrix(matrix, new_matrix, min_rows, min_cols);
   destroy(matrix, rows);
-  create(matrix, new_rows, new_cols);
-  matrix = new_matrix;
-  for (size_t i = 0; i < new_rows; i++)
-  {
-    matrix[i] = new_matrix[i];
-  }
+  matrix = create(new_rows, new_cols);
+  copy_matrix(new_matrix, matrix, new_rows, new_cols);
+  destroy(new_matrix, new_rows);
+  return matrix;
 }
 
 Matrix::Matrix(size_t rows, size_t cols):
@@ -122,19 +114,19 @@ Matrix::Matrix(const Matrix& mtx_old):
   cols_(mtx_old.cols_),
   matrix_(create(rows_, cols_))
 {
-  copy_matrix(mtx_old.matrix_, matrix_, rows_, cols_);
+  ::copy_matrix(mtx_old.matrix_, matrix_, rows_, cols_);
 }
 Matrix::~Matrix()
 {
-  destroy(matrix_, rows_);
+  ::destroy(matrix_, rows_);
 }
 void Matrix::input_()
 {
-  input(matrix_, rows_, cols_);
+  ::input(matrix_, rows_, cols_);
 }
 void Matrix::print_() const
 {
-  print(matrix_, rows_, cols_);
+  ::print(matrix_, rows_, cols_);
 }
 int Matrix::get_rows_() const
 {
@@ -146,9 +138,11 @@ int Matrix::get_cols_() const
 }
 void Matrix::initialize_(int init_num)
 {
-  initialize(matrix_, rows_, cols_, init_num);
+  ::initialize(matrix_, rows_, cols_, init_num);
 }
 void Matrix::change_size_(int new_rows, int new_cols)
 {
-  change_size(matrix_, rows_, cols_, new_rows, new_cols);
+  matrix_ = ::change_size(matrix_, rows_, cols_, new_rows, new_cols);
+  rows_ = new_rows;
+  cols_ = new_cols;
 }
