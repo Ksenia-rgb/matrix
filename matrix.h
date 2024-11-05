@@ -18,7 +18,6 @@ private:
     int** matrix_;
 };
 int** create(size_t M, size_t N);
-void create(int** matrix, size_t rows, size_t cols);
 void copy_matrix(int** mtx_old_, int** matrix_, size_t rows_, size_t cols_);
 void destroy(int** table, size_t M);
 void input(int** table, size_t M, size_t N);

@@ -10,7 +10,7 @@ int main()
     return 1;
   }
   Matrix mtx(rows, cols);
-  mtx.initialize_(0);
+  mtx.input_();
   mtx.print_();
   Matrix mtx1(mtx);
   mtx1.print_();

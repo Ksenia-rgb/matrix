@@ -19,22 +19,6 @@ int** create(size_t rows, size_t cols)
   }
   return matrix;
 }
-void create(int** matrix, size_t rows, size_t cols)
-{
-  matrix = new int*[rows];
-  size_t created = 0;
-  try
-  {
-    for (; created < rows; ++created)
-    {
-      matrix[created] = new int[cols];
-    }
-  }
-  catch (const std::bad_alloc& e) {
-    destroy(matrix, created);
-    std::cerr << "ERROR: Memory not allocated for array\n";
-  }
-}
 void copy_matrix(int const* const* const mtx_old_, int* const* const matrix_, size_t rows_, size_t cols_)
 {
   for (size_t i = 0; i < rows_; i++)
@@ -93,7 +77,7 @@ void initialize(int* const* const matrix, size_t rows, size_t cols, int init_num
 int** change_size(int** matrix, size_t rows, size_t cols, size_t new_rows, size_t new_cols)
 {
   size_t min_rows = std::min(rows, new_rows);
-  size_t min_cols = std::max(cols, new_cols);
+  size_t min_cols = std::min(cols, new_cols);
   int** new_matrix = create(new_rows, new_cols);
   initialize(new_matrix, new_rows, new_cols, 0);
   copy_matrix(matrix, new_matrix, min_rows, min_cols);
@@ -107,12 +91,12 @@ int** change_size(int** matrix, size_t rows, size_t cols, size_t new_rows, size_
 Matrix::Matrix(size_t rows, size_t cols):
   rows_(rows),
   cols_(cols),
-  matrix_(create(rows, cols))
+  matrix_(::create(rows, cols))
 {}
 Matrix::Matrix(const Matrix& mtx_old):
   rows_(mtx_old.rows_),
   cols_(mtx_old.cols_),
-  matrix_(create(rows_, cols_))
+  matrix_(::create(rows_, cols_))
 {
   ::copy_matrix(mtx_old.matrix_, matrix_, rows_, cols_);
 }
