@@ -15,17 +15,17 @@ int** create(size_t rows, size_t cols)
   }
   catch(const std::bad_alloc& e) {
     destroy(matrix, created);
-    std::cerr << "ERROR: Memory not allocated for array\n";
+    throw;
   }
   return matrix;
 }
-void copy_matrix(int const* const* const mtx_old_, int* const* const matrix_, size_t rows_, size_t cols_)
+void copy_matrix(int const* const* const mtx_old, int* const* const matrix, size_t rows, size_t cols)
 {
-  for (size_t i = 0; i < rows_; i++)
+  for (size_t i = 0; i < rows; i++)
   {
-    for (size_t j = 0; j < cols_; j++)
+    for (size_t j = 0; j < cols; j++)
     {
-        matrix_[i][j] = mtx_old_[i][j];
+        matrix[i][j] = mtx_old[i][j];
     }
   }
 }
@@ -41,15 +41,15 @@ void input(int** matrix, size_t rows, size_t cols)
 {
   for (size_t i = 0; i < rows; i++)
   {
-    for (size_t j = 0; i < cols; j++)
+    for (size_t j = 0; j < cols; j++)
     {
       std::cin >> matrix[i][j];
     }
   }
   if (!std::cin.good())
   {
-    std::cerr << "Error input\n";
     destroy(matrix, rows);
+    throw std::logic_error("Error input");
   }
 }
 void print(const int* const* const matrix, size_t rows, size_t cols)
@@ -76,16 +76,17 @@ void initialize(int* const* const matrix, size_t rows, size_t cols, int init_num
 }
 int** change_size(int** matrix, size_t rows, size_t cols, size_t new_rows, size_t new_cols)
 {
+  if (rows == new_rows && cols == new_cols)
+  {
+    return matrix;
+  }
   size_t min_rows = std::min(rows, new_rows);
   size_t min_cols = std::min(cols, new_cols);
   int** new_matrix = create(new_rows, new_cols);
   initialize(new_matrix, new_rows, new_cols, 0);
   copy_matrix(matrix, new_matrix, min_rows, min_cols);
   destroy(matrix, rows);
-  matrix = create(new_rows, new_cols);
-  copy_matrix(new_matrix, matrix, new_rows, new_cols);
-  destroy(new_matrix, new_rows);
-  return matrix;
+  return new_matrix;
 }
 
 Matrix::Matrix(size_t rows, size_t cols):
@@ -112,11 +113,11 @@ void Matrix::print_() const
 {
   ::print(matrix_, rows_, cols_);
 }
-int Matrix::get_rows_() const
+size_t Matrix::get_rows_() const
 {
   return rows_;
 }
-int Matrix::get_cols_() const
+size_t Matrix::get_cols_() const
 {
   return cols_;
 }

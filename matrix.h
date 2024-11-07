@@ -9,19 +9,19 @@ struct Matrix
     ~Matrix();
     void input_();
     void print_() const;
-    int get_rows_() const;
-    int get_cols_() const;
+    size_t get_rows_() const;
+    size_t get_cols_() const;
     void initialize_(int init_num);
     void change_size_(int new_rows, int new_cols);
 private:
     size_t rows_, cols_;
     int** matrix_;
 };
-int** create(size_t M, size_t N);
-void copy_matrix(int** mtx_old_, int** matrix_, size_t rows_, size_t cols_);
-void destroy(int** table, size_t M);
-void input(int** table, size_t M, size_t N);
-void print(const int * const * table, size_t M, size_t N);
-void initialize(int** matrix, size_t rows, size_t cols, int init_num);
+int** create(size_t rows, size_t cols);
+void copy_matrix(int const* const* const mtx_old, int* const* const matrix, size_t rows, size_t cols);
+void destroy(int** matrix, size_t rows);
+void input(int** matrix, size_t rows, size_t cols);
+void print(const int* const* matrix, size_t rows, size_t cols);
+void initialize(int* const* const matrix, size_t rows, size_t cols, int init_num);
 int** change_size(int** matrix, size_t rows, size_t cols, size_t new_rows, size_t new_cols);
 #endif
