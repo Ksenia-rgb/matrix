@@ -25,7 +25,7 @@ void copy_matrix(int const* const* const mtx_old, int* const* const matrix, size
   {
     for (size_t j = 0; j < cols; j++)
     {
-        matrix[i][j] = mtx_old[i][j];
+      matrix[i][j] = mtx_old[i][j];
     }
   }
 }
@@ -70,7 +70,7 @@ void initialize(int* const* const matrix, size_t rows, size_t cols, int init_num
   {
     for (size_t j = 0; j < cols; j++)
     {
-        matrix[i][j] = init_num;
+      matrix[i][j] = init_num;
     }
   }
 }
