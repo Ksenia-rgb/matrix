@@ -162,3 +162,50 @@ int** changeSize(int** matrix, size_t rows, size_t cols, size_t new_rows, size_t
   destroy(matrix, rows);
   return new_matrix;
 }
+int** transpose(const int* const* const matrix, size_t rows, size_t cols)
+{
+  int** trans_matrix = create(cols, rows);
+  for (size_t i = 0; i < rows; i++)
+  {
+    for (size_t j = 0; j < cols; j++)
+    {
+      trans_matrix[j][i] = matrix[i][j];
+    }
+  }
+  return trans_matrix;
+}
+int** convert(const int* row_matrix, size_t size, const size_t* lns, size_t rows)
+{
+  int** table_matrix = new int*[rows];
+  size_t created_rows = 0;
+  try
+  {
+    size_t created_elems = 0;
+    for (; created_rows < rows; created_rows++)
+    {
+      table_matrix[created_rows] = new int[lns[created_rows]];
+      for (size_t i = 0; i < lns[created_rows]; i++)
+      {
+        table_matrix[created_rows][i] = row_matrix[created_elems++];
+      }
+    }
+    return table_matrix;
+  }
+  catch (const std::bad_alloc& e)
+  {
+    destroy(table_matrix, created_rows);
+    throw;
+  }
+}
+void print(const int* const *const table_matrix, const size_t* lns, size_t rows)
+{
+  for (size_t i = 0; i < rows; i++)
+  {
+    std::cout << table_matrix[i][0];
+    for (size_t j = 1; j < lns[i]; j++)
+    {
+      std::cout << ' ' << table_matrix[i][j];
+    }
+    std::cout << '\n';
+  }
+}

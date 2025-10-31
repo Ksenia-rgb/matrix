@@ -32,4 +32,9 @@ void input(int* const* const matrix, size_t rows, size_t cols);
 void print(const int* const* matrix, size_t rows, size_t cols);
 void initialize(int* const* const matrix, size_t rows, size_t cols, int init_num);
 int** changeSize(int** matrix, size_t rows, size_t cols, size_t new_rows, size_t new_cols);
+
+int** transpose(const int* const* const matrix, size_t rows, size_t cols);
+
+int** convert(const int* row_matrix, size_t size, const size_t* lns, size_t rows);
+void print(const int* const* const table_matrix, const size_t* lns, size_t rows);
 #endif
